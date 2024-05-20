@@ -1,0 +1,93 @@
+---
+title: "Multicollinearity"
+author: "Jullian Alcantara"
+date: "2024-03-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# `seatpos` data from faraway package
+
+```{r}
+library(faraway)
+head(seatpos)
+pairs(hipcenter ~., data = seatpos)
+```
+
+
+# Correlation
+```{r}
+round(cor(seatpos),2)
+library(psych)
+cor.plot(seatpos)
+```
+
+
+## Adjusted R squared value
+```{r}
+fit <- lm(hipcenter ~ ., data = seatpos)
+summary(fit)
+```
+
+
+## Calculate VIF Variance
+```{r}
+#faraway or car package
+round(vif(fit),2)
+
+# When VIF is greater than 5 then we can tell 
+```
+
+
+# Refit the model
+```{r}
+fit2 <- lm(hipcenter ~ Age + Weight + Ht, data = seatpos)
+summary(fit2)
+
+fit3 <- lm(hipcenter ~ Age + Weight + Ht + Thigh, data = seatpos)
+summary(fit3)
+```
+
+
+## Caluculating VIF manually
+```{r}
+# VIF of Age predictor
+x <- seatpos[,-9]
+```
+
+
+
+# Try Prostate data
+```{r}
+library(faraway)
+data("prostate")
+head(prostate)
+str(prostate)
+pairs(lpsa ~ ., data = prostate)
+```
+
+
+# Correlation
+```{r}
+round(cor(prostate),2)
+library(psych)
+cor.plot(prostate)
+```
+The variable lcavol has a notable correlation with svi (0.54, seminal vesicle invasion), lcp (0.68, log(capsular penetration) gleason (0.43, Gleason score) and pgg45 (0.43,percentage Gleason
+scores 4 or 5) respectively.
+
+
+
+```{r}
+mod <- lm(lpsa ~ ., data = prostate)
+summary (mod)
+```
+
+
+```{r}
+vif(mod)
+```
+
